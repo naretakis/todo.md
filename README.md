@@ -95,7 +95,7 @@ todo.md supports `key:value` metadata. These are plain text — useful for filte
 ---
 ## Querying with DataviewJS
 
-Use DataviewJS to create filtered views. These queries use the Todo.txt Mode CSS classes for styling.
+Use DataviewJS to create filtered views. These queries use the **Todo.txt Mode** Obsidian plugin CSS classes for styling. So you DO need the **Todo.txt Mode** Obsidian plugin installed for it to style the queries correctly. 
 
 ### Active @work tasks
 ```dataviewjs
