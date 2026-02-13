@@ -1,196 +1,177 @@
-# todo.txt format
-[![Gitter](https://img.shields.io/gitter/room/todotxt/todotxt.svg)](https://gitter.im/todotxt/todotxt)
+# todo.md
 
-A complete primer on the whys and hows of todo.txt.
+A plain-text task system for Obsidian. One file. No plugins required.
 
-The first and most important rule of todo.txt:
+## Quick Start
 
-> A single line in your todo.txt text file represents a single task.
-
-
-## Why plain text?
-
-Plain text is software and operating system agnostic. It's searchable, portable, lightweight, and easily manipulated. It's unstructured. It works when someone else's web server is down or your Outlook .PST file is corrupt. There's no exporting and importing, no databases or tags or flags or stars or prioritizing or _insert company name here_-induced rules on what you can and can't do with it.
-
-
-## The 3 axes of an effective todo list
-
-Using special notation in todo.txt, you can create a list that's sliceable by 3 key axes.
-
-
-### Priority
-Your todo list should be able to tell you what's the next most important thing for you to get done - either by project or by context or overall. You can optionally assign tasks a priority that'll bubble them up to the top of the list.
-
-
-### Project
-The only way to move a big project forward is to tackle a small subtask associated with it. Your `todo.txt` should be able to list out all the tasks specific to a project.
-
-In order to move along a project like "Cleaning out the garage," my task list should give me the next logical action to take in order to move that project along. "Clean out the garage" isn't a good todo item; but "Call Goodwill to schedule pickup" in the "Clean out garage" project is.
-
-
-### Context
-[Getting Things Done](https://en.wikipedia.org/wiki/Getting_Things_Done) author David Allen suggests splitting up your task lists by context - ie, the place and situation where you'll work on the job. Messages that you need to send go in the `@email` context; calls to be made `@phone`, household projects `@home`.
-
-That way, when you've got a few minutes in the car with your cell phone, you can easily check your `@phone` tasks and make a call or two while you have the opportunity.
-
-This is all possible inside `todo.txt`.
-
-
-
-## `todo.txt` format rules
-
-<img src="./description.svg" width="100%" height="500">
-
-Your `todo.txt` is a plain text file. To take advantage of structured task metadata like priority, projects, context, creation, and completion date, there are a few simple but flexible file format rules.
-
-Philosophically, the `todo.txt` file format has two goals:
-
-- The file contents should be human-readable without requiring any tools other than a plain text viewer or editor.
-- A user can manipulate the file contents in a plain text editor in sensible, expected ways. For example, a text editor that can sort lines alphabetically should be able to sort your task list in a meaningful way.
-
-These two goals are why, for example, lines start with priority and/or dates, so that they are easily sorted by priority or time, and completed items are marked with an `x`, which both sorts at the bottom of an alphabetical list and looks like a filled-in checkbox.
-
-Here are the rest.
-
-
-## Incomplete Tasks: 3 Format Rules
-
-The beauty of todo.txt is that it's completely unstructured; the fields you can attach to each task are only limited by your imagination. To get started, use special notation to indicate task context (e.g. `@phone` ), project (e.g. `+GarageSale` ) and priority (e.g. `(A)` ).
-
-A todo.txt file might look like the following:
+Open `todo.md`. Add a task. Done.
 
 ```
-(A) Thank Mom for the meatballs @phone
-(B) Schedule Goodwill pickup +GarageSale @phone
-Post signs around the neighborhood +GarageSale
-@GroceryStore pies
+(A) Write proposal @work [[Project Name]]
+(B) Review budget @work
+Call mom @personal
+x 2026-02-13 Buy groceries @home
 ```
 
-A search and filter for the `@phone` contextual items would output:
+That's the whole system.
+
+## The Basics
+
+| Element | Example | Purpose |
+|---------|---------|---------|
+| Priority | `(A)` `(B)` `(C)` | What matters most (optional) |
+| Context | `@work` `@personal` | Where/when you can do it |
+| Project | `[[Project Name]]` | Links to Obsidian pages |
+| Done | `x 2026-02-13` | Prepend when complete |
+
+All elements are optional. A task can be as simple as `Buy milk`.
+
+## Gravity & Drift
+
+New tasks go at the top. Completed tasks stay where they are.
+
+Over time, finished work sinks. Active work floats. An unfinished task surrounded by completed ones creates tension:
 
 ```
-(A) Thank Mom for the meatballs @phone
-(B) Schedule Goodwill pickup +GarageSale @phone
+x 2026-02-05 Refactor parser @work
+x 2026-02-07 Fix API bug @work
+(A) Finalize migration plan @work [[Infrastructure]]
+x 2026-02-09 Update README @work
 ```
 
-To just see the `+GarageSale` project items would output:
+That tension is a signal. Is this blocked? Still important? Should it be promoted or deleted?
+
+Auto-sorting would erase this. Drift preserves it.
+
+## Principles
+
+- Plain text is the source of truth
+- No hidden metadata, no databases
+- No automatic reordering or archiving
+- If Obsidian disappeared, this file still works
+
+---
+
+> **You can stop here.** Everything above is the complete system.
+> 
+> What follows is optional — power-user features, plugins, and queries for those who want more.
+
+---
+
+# Going Deeper (Power-User Features)
+
+## Optional Plugin: Todo.txt Mode
+
+The system works without plugins. But if you want syntax highlighting, install *Obsidian Todo.txt Mode*.
+
+Use it for:
+- Visual clarity
+- Automatic completion dates
+
+Avoid its auto-sorting features if you want to preserve drift.
+
+---
+## Extended Syntax
+
+todo.md supports `key:value` metadata. These are plain text — useful for filtering with DataviewJS.
 
 ```
-(B) Schedule Goodwill pickup +GarageSale @phone
-Post signs around the neighborhood +GarageSale
+(A) Submit tax return @work due:2026-04-15
+(B) Call vendor @work blocked:waiting-on-legal
+(C) Plan vacation @personal t:2026-05-01
+(B) Write report @work est:2h
+(A) Expense report @work rec:monthly
 ```
 
-There are three formatting rules for current todo's.
+| Key | Purpose |
+|-----|---------|
+| `due:` | Deadline (informational, not enforced) |
+| `t:` | Threshold/start date |
+| `est:` | Time estimate |
+| `rec:` | Recurrence pattern |
+| `blocked:` | Why it's stuck |
+| *anything* | Invent your own |
 
-### Rule 1: If priority exists, it ALWAYS appears first.
+---
+## Querying with DataviewJS
 
-The priority is an uppercase character from A-Z enclosed in parentheses and followed by a space.
+Use DataviewJS to create filtered views. These queries use the Todo.txt Mode CSS classes for styling.
 
-This task has a priority:
+### Active @work tasks
+```dataviewjs
+const file = await dv.io.load("todo.md")
+const lines = file.split("\n")
+const tasks = lines.filter(line => line.includes("@work") && !line.startsWith("x "))
 
-```
-(A) Call Mom
-```
+function styleLine(line) {
+  return line
+    .replace(/\(([ABC])\)/g, '<span class="todo-txt-mode-priority">($1)</span>')
+    .replace(/@(\w+)/g, '<span class="todo-txt-mode-context">@$1</span>')
+    .replace(/\[\[([^\]]+)\]\]/g, '<span class="todo-txt-mode-project">[[$1]]</span>')
+    .replace(/due:(\d{4}-\d{2}-\d{2})/g, '<span class="todo-txt-mode-due-date">due:$1</span>')
+}
 
-These tasks do not have any priorities:
-
-```
-Really gotta call Mom (A) @phone @someday
-(b) Get back to the boss
-(B)->Submit TPS report
-```
-
-
-### Rule 2: A task's creation date may optionally appear directly after priority and a space.
-
-If there is no priority, the creation date appears first. If the creation date exists, it should be in the format `YYYY-MM-DD`.
-
-These tasks have creation dates:
-
-```
-2011-03-02 Document +TodoTxt task format
-(A) 2011-03-02 Call Mom
-```
-
-This task doesn't have a creation date:
-
-```
-(A) Call Mom 2011-03-02
+dv.paragraph(tasks.map(styleLine).join("<br>"))
 ```
 
+### Active @personal tasks
+```dataviewjs
+const file = await dv.io.load("todo.md")
+const lines = file.split("\n")
+const tasks = lines.filter(line => line.includes("@personal") && !line.startsWith("x "))
 
-### Rule 3: Contexts and Projects may appear anywhere in the line _after_ priority/prepended date.
+function styleLine(line) {
+  return line
+    .replace(/\(([ABC])\)/g, '<span class="todo-txt-mode-priority">($1)</span>')
+    .replace(/@(\w+)/g, '<span class="todo-txt-mode-context">@$1</span>')
+    .replace(/\[\[([^\]]+)\]\]/g, '<span class="todo-txt-mode-project">[[$1]]</span>')
+    .replace(/due:(\d{4}-\d{2}-\d{2})/g, '<span class="todo-txt-mode-due-date">due:$1</span>')
+}
 
-- A *context* is preceded by a single space and an at-sign (`@`).
-- A *project* is preceded by a single space and a plus-sign (`+`).
-- A *project* or *context* contains any non-whitespace character.
-- A *task* may have zero, one, or more than one *projects* and *contexts* included in it.
-
-For example, this task is part of the `+Family` and `+PeaceLoveAndHappiness` projects as well as the `@iphone` and `@phone` contexts:
-
-```
-(A) Call Mom +Family +PeaceLoveAndHappiness @iphone @phone
-```
-
-This task has no contexts in it:
-
-```
-Email SoAndSo at soandso@example.com
+dv.paragraph(tasks.map(styleLine).join("<br>"))
 ```
 
-This task has no projects in it:
+### Completed tasks
+```dataviewjs
+const file = await dv.io.load("todo.md")
+const lines = file.split("\n")
+const tasks = lines.filter(line => line.startsWith("x "))
 
-```
-Learn how to add 2+2
-```
+function styleLine(line) {
+  let styled = line
+    .replace(/\(([ABC])\)/g, '<span class="todo-txt-mode-priority">($1)</span>')
+    .replace(/@(\w+)/g, '<span class="todo-txt-mode-context">@$1</span>')
+    .replace(/\[\[([^\]]+)\]\]/g, '<span class="todo-txt-mode-project">[[$1]]</span>')
+    .replace(/^x (\d{4}-\d{2}-\d{2})/g, 'x <span class="todo-txt-mode-completion-date">$1</span>')
+  return `<span class="todo-txt-mode-completed">${styled}</span>`
+}
 
-
-
-## Complete Tasks: 2 Format Rules
-
-Two things indicate that a task has been completed.
-
-
-### Rule 1: A completed task starts with a lowercase x character (`x`).
-
-If a task starts with an `x` (case-sensitive and lowercase) followed directly by a space, it is marked as complete.
-
-This is a complete task:
-
-```
-x 2011-03-03 Call Mom
+dv.paragraph(tasks.map(styleLine).join("<br>"))
 ```
 
-These are not complete tasks.
+### Tasks with due dates
+```dataviewjs
+const file = await dv.io.load("todo.md")
+const lines = file.split("\n")
+const tasks = lines.filter(line => line.includes("due:") && !line.startsWith("x "))
 
-```
-xylophone lesson
-X 2012-01-01 Make resolutions
-(A) x Find ticket prices
-```
+function styleLine(line) {
+  return line
+    .replace(/\(([ABC])\)/g, '<span class="todo-txt-mode-priority">($1)</span>')
+    .replace(/@(\w+)/g, '<span class="todo-txt-mode-context">@$1</span>')
+    .replace(/\[\[([^\]]+)\]\]/g, '<span class="todo-txt-mode-project">[[$1]]</span>')
+    .replace(/due:(\d{4}-\d{2}-\d{2})/g, '<span class="todo-txt-mode-due-date">due:$1</span>')
+}
 
-We use a lowercase x so that completed tasks sort to the bottom of the task list using standard sort tools.
-
-
-### Rule 2: The date of completion appears directly after the x, separated by a space.
-
-For example:
-
-```
-x 2011-03-02 2011-03-01 Review Tim's pull request +TodoTxtTouch @github
+dv.paragraph(tasks.map(styleLine).join("<br>"))
 ```
 
-If you’ve prepended the creation date to your task, on completion it will appear directly after the completion date. This is so your completed tasks sort by date using standard sort tools. Many Todo.txt clients discard priority on task completion. To preserve it, use the `key:value` format described below (e.g. `pri:A`)
+### Blocked tasks
+```dataviewjs
+const file = await dv.io.load("todo.md")
+const lines = file.split("\n")
+const tasks = lines.filter(line => line.includes("blocked:") && !line.startsWith("x "))
+dv.list(tasks)
+```
 
-With the completed date (required), if you've used the prepended date (optional), you can calculate how many days it took to complete a task.
-
-
-
-## Additional File Format Definitions
-
-Tool developers may define additional formatting rules for extra metadata.
-
-Developers should use the format `key:value` to define additional metadata (e.g. `due:2010-01-02` as a due date).
-
-Both `key` and `value` must consist of non-whitespace characters, which are not colons. Only one colon separates the `key` and `value`.
-
+The power is in the plain text. Query however you like.
