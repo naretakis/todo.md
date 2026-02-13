@@ -1,6 +1,6 @@
 # todo.md
 
-A plain-text task system for Obsidian. One file. No plugins required.
+A plain-text task system for Obsidian. One file. No plugins required (but one plugin optional if you want some nice visual styling).
 
 ## Quick Start
 
